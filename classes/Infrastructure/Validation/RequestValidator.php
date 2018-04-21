@@ -32,14 +32,19 @@ class RequestValidator
     /**
      * @param Request $request
      * @param array   $rules
+     * @param array   $messages
      *
      * @throws ValidationException
      */
-    public function validate(Request $request, array $rules)
+    public function validate(Request $request, array $rules, array $messages = [])
     {
         $data = $request->query->all() + $request->request->all() + $request->files->all();
 
-        $validator = $this->factory->make($data, $rules);
+        $validator = $this->factory->make(
+            $data,
+            $rules,
+            $messages
+        );
 
         if ($validator->fails()) {
             throw ValidationException::withErrors(array_flatten($validator->errors()->toArray()));
